@@ -1,0 +1,9 @@
+[submodule "ii-interview-backend"]
+	path = ii-interview-backend
+	url = git@github.com:BryceAtHP/ii-interview-backend.git
+[submodule "ii-interview-frontend"]
+	path = ii-interview-frontend
+	url = git@github.com:BryceAtHP/ii-interview-frontend.git
+[submodule "ii-interview-nginx"]
+	path = ii-interview-nginx
+	url = git@github.com:BryceAtHP/ii-interview-nginx.git
