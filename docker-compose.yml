@@ -1,0 +1,58 @@
+version: "3.9"
+services:
+    database:
+        image: postgres
+        restart: always
+        ports:
+            - "${DB_PORT}"
+        volumes:
+            - ./database_data:/var/lib/postgresql/database
+        env_file:
+            - .env
+        
+    backend:
+        container_name: backend
+        image: brycetucker516/ii-interview-backend-base
+        working_dir: /srv/backend
+        entrypoint:
+            - /bin/sh
+            - /srv/backend/entrypoint.sh
+        volumes:
+            - ./ii-interview-backend:/srv/backend
+            - ./backend_gems:/usr/local/bundle
+        depends_on:
+            - 'database'
+        ports:
+            - "3000"
+        env_file:
+            - .env
+        user: "${USER_ID}:${GROUP_ID}"
+        
+    frontend:
+        container_name: frontend
+        image: brycetucker516/ii-interview-frontend-base
+        working_dir: /app
+        entrypoint:
+            - /bin/sh
+            - /app/entrypoint.sh
+        ports:
+            - "3000"
+        volumes:
+            - ./ii-interview-frontend:/app
+        env_file:
+            - .env
+    
+    nginx:
+        image: nginx:latest
+        volumes:
+            - ./ii-interview-nginx/conf/default.conf:/etc/nginx/conf.d/default.conf
+            - ./ii-interview-nginx/dev_certs:/etc/dev_certs
+            - ./ii-interview-nginx/logs:/var/log/nginx
+        depends_on:
+            - "frontend"
+            - "backend"
+        ports:
+            - 443:443
+            - 8080:8080
+            - 8010:8010
+            
